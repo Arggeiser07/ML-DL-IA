@@ -1,0 +1,20 @@
+# --- Python & Modelos ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env
+.ipynb_checkpoints/
+
+# --- Librerías de IA & Gradio ---
+.gradio/
+flagged/
+.chroma/
+.pinecone/
+
+# --- Archivos del Sistema ---
+.DS_Store
+Thumbs.db
