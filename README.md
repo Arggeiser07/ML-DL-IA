@@ -2,4 +2,5 @@
 Se irán añadiendo proyectos a medida que se vayan realizando.
 Son proyectos mejorables teniendo en cuenta que son de uso personal y sobre todo de aprendizaje para mi entorno laboral.
 Son compartidos con el fin de ayudar a otros estudiantes que quieran empezar y busquen una orientación sobre cómo se estructuran los diferentes bloques o pipelines para crear proyectos en ML/DL e IA.
+Hay proyectos sueltos en la rama principal para abrir directamente en google colab con el fin de ayudar al entendimientos de ciertas técnicas o pipelines.
 Se compartirán en redes sociales/portales orientadas el empleo: LinkedIn, Infojobs.
