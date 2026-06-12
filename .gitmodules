@@ -1,9 +1,0 @@
-[submodule "Notibrief"]
-	path = Notibrief
-	url = https://github.com/Arggeiser07/Notibrief.git
-[submodule "Pipelines-b-sicos-NLP"]
-	path = Pipelines-b-sicos-NLP
-	url = https://github.com/Arggeiser07/Pipelines-b-sicos-NLP.git
-[submodule "Sentimind-NLP"]
-	path = Sentimind-NLP
-	url = https://github.com/Arggeiser07/Sentimind-NLP.git

@@ -1,0 +1,193 @@
+================================================================================
+EXPLICACIÓN DETALLADA DEL CÓDIGO - ANÁLISIS DE SENTIMIENTO CON STREAMLIT
+================================================================================
+
+LIBRERÍAS IMPORTADAS:
+--------------------
+
+1. import streamlit as st
+   - Streamlit es un framework para crear aplicaciones web interactivas sin 
+     necesidad de JavaScript o HTML.
+   - "st" es el alias que usamos para acceder a las funciones de Streamlit.
+   - Ejemplo: st.title(), st.text_area(), st.button() crean elementos en la web.
+
+2. from textblob import TextBlob
+   - TextBlob es una librería para procesamiento de lenguaje natural (NLP).
+   - Permite análisis de texto de forma simple: detección de idioma, traducción,
+     análisis de sentimiento, etc.
+   - Alias "TextBlob" se usa para crear objetos blob de texto.
+
+3. from textblob.exceptions import NotTranslated
+   - Importamos la excepción específica NotTranslated para manejar errores
+     cuando la traducción falla.
+   - Esto permite capturar errores de traducción específicamente.
+
+
+FUNCIÓN 1: detect_and_translate(text: str) -> str
+---------------------------------------------------
+
+Esta función detecta el idioma del texto y lo traduce a inglés si es necesario.
+
+   blob = TextBlob(text)
+   - Crea un objeto TextBlob con el texto ingresado.
+   - Este objeto tiene métodos para analizar el texto.
+
+   language = blob.detect_language()
+   - Detecta el idioma del texto usando análisis estadístico.
+   - Retorna un código de dos letras: "es" (español), "en" (inglés), etc.
+   - Se coloca en un try-except porque a veces falla.
+
+   if language != "en":
+   - Si el idioma NO es inglés, procede a traducir.
+   - Si ya está en inglés, saltamos la traducción (optimización).
+
+   translated = blob.translate(to="en")
+   - Traduce el texto al inglés.
+   - Utiliza servicios en línea detrás de cámaras.
+
+   return str(translated)
+   - Convierte el objeto TextBlob traducido a string y lo retorna.
+
+MANEJO DE ERRORES:
+   - Si falla la detección de idioma → retorna el texto original sin traducir
+   - Si falla la traducción (NotTranslated) → retorna el texto original
+   - Si hay cualquier otro error → retorna el texto original
+
+RESULTADO: Un string con el texto traducido a inglés (o el original si ya estaba en inglés)
+
+
+FUNCIÓN 2: analyze_sentiment(text: str) -> dict
+--------------------------------------------------
+
+Esta función analiza el sentimiento del texto traducido.
+
+   translated_text = detect_and_translate(text)
+   - Llama a la función anterior para obtener el texto en inglés.
+   - Esto es importante porque TextBlob es más preciso en inglés.
+
+   sentiment_blob = TextBlob(translated_text)
+   - Crea un nuevo objeto TextBlob con el texto traducido.
+
+   sentiment = sentiment_blob.sentiment
+   - Extrae el análisis de sentimiento.
+   - Retorna un objeto con dos atributos: polarity y subjectivity.
+
+   POLARITY (Polaridad):
+      - Rango: -1.0 a 1.0
+      - -1.0 = sentimiento muy negativo
+      -  0.0 = sentimiento neutral
+      -  1.0 = sentimiento muy positivo
+      - Ejemplo: "Amo este producto" → polarity = 0.9
+
+   SUBJECTIVITY (Subjetividad):
+      - Rango: 0.0 a 1.0
+      - 0.0 = oración objetiva (hechos, datos)
+      - 1.0 = oración subjetiva (opiniones, sentimientos)
+      - Ejemplo: "El cielo es azul" → baja subjetividad
+      - Ejemplo: "El cielo se ve hermoso" → alta subjetividad
+
+   return { ... }
+   - Retorna un diccionario con 4 claves:
+     * "original": el texto que el usuario escribió
+     * "translated": el texto traducido a inglés (para referencia)
+     * "polarity": valor entre -1 y 1
+     * "subjectivity": valor entre 0 y 1
+
+
+INTERFAZ DE STREAMLIT (parte ejecutable):
+------------------------------------------
+
+st.title("Análisis de sentimiento con Streamlit")
+- Muestra un título grande en la página web.
+- El texto entre comillas es lo que ve el usuario en la pantalla.
+
+texto = st.text_area("Escribe un texto en español o inglés:")
+- Crea un área de texto donde el usuario puede escribir.
+- La entrada se guarda en la variable "texto".
+- El string es la etiqueta/instrucción que ve el usuario.
+
+if st.button("Analizar sentimiento"):
+- Crea un botón interactivo.
+- El código dentro del if se ejecuta SOLO cuando el usuario hace clic.
+- El string es el texto del botón que ve el usuario.
+
+if not texto.strip():
+- ".strip()" elimina espacios en blanco al inicio y final.
+- "not" verifica si el texto está vacío.
+- Si está vacío, muestra una advertencia.
+
+st.warning("Por favor ingresa un texto para analizar.")
+- Muestra un mensaje de advertencia en color amarillo/naranja.
+- Se usa para validar que el usuario haya ingresado algo.
+
+else: (si el texto NO está vacío)
+    resultado = analyze_sentiment(texto)
+    - Llama nuestra función para analizar el sentimiento.
+    - Guarda el resultado (diccionario) en "resultado".
+
+st.write("**Texto original:**", resultado["original"])
+- Muestra el texto original en la página.
+- Los ** hacen que aparezca en negrita.
+- resultado["original"] accede al valor del diccionario.
+
+if resultado["translated"] != resultado["original"]:
+    st.write("**Texto traducido a inglés:**", resultado["translated"])
+- Solo muestra la traducción si es diferente del original.
+- Evita mostrar redundancia (si ya estaba en inglés).
+
+st.write("**Polaridad:**", resultado["polarity"])
+- Muestra el valor de polaridad (entre -1 y 1).
+- El usuario ve si el sentimiento es positivo o negativo.
+
+st.write("**Subjetividad:**", resultado["subjectivity"])
+- Muestra el valor de subjetividad (entre 0 y 1).
+- El usuario ve si la oración es objetiva o subjetiva.
+
+
+FLUJO COMPLETO DE LA APLICACIÓN:
+---------------------------------
+
+1. Usuario ve la página con:
+   - Un título
+   - Un cuadro de texto donde escribir
+   - Un botón "Analizar sentimiento"
+
+2. Usuario escribe algo en español: "¡Amo este producto!"
+
+3. Usuario presiona el botón
+
+4. La aplicación:
+   a) Obtiene el texto: "¡Amo este producto!"
+   b) Valida que no esté vacío ✓
+   c) Llama analyze_sentiment()
+   d) detect_and_translate() detecta que es español
+   e) Traduce a inglés: "I love this product!"
+   f) Calcula sentimiento del texto en inglés
+   g) Retorna: polarity=0.9, subjectivity=0.6
+   h) Retorna al usuario:
+      - "Texto original: ¡Amo este producto!"
+      - "Texto traducido a inglés: I love this product!"
+      - "Polaridad: 0.9" (positivo)
+      - "Subjetividad: 0.6" (relativamente subjetivo)
+
+5. Usuario puede escribir otro texto y repetir
+
+
+PARA EJECUTAR:
+--------------
+Abre una terminal en la carpeta "proyecto_Analiz_Sent" y ejecuta:
+
+    streamlit run app.py
+
+Luego Streamlit abrirá una página web (localhost:8501) con la aplicación.
+
+
+DEPENDENCIAS NECESARIAS:
+------------------------
+pip install streamlit
+pip install textblob
+
+También necesitarás descargar el corpus de TextBlob:
+python -m textblob.download_corpora
+
+================================================================================
