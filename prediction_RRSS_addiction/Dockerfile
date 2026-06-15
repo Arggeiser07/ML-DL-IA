@@ -21,4 +21,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # 6. Comando por defecto para arrancar la aplicación
-CMD ["python", "src/main.py"]
+#CMD ["python", "src/main.py"]
+CMD ["streamlit", "run", "src/app_visual.py", "--server.port=8501", "--server.address=0.0.0.0"]
