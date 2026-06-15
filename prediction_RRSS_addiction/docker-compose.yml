@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  data-science-app:
+    build: .
+    image: addiction-image
+    container_name: pipeline_addiction_container
+    ports:
+      - "8501:8501"  # <-- ¡ESTO! Mapea la web para poder verla en tu navegador
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1  # <-- ¡ESTO! Fuerza a Python a pintar e interactuar en tiempo real
+   

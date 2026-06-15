@@ -1,0 +1,11 @@
+# Entornos virtuales (¡Esto evitará que se suba la carpeta .venv completa!)
+.venv/
+venv/
+env/
+
+# Caché de Python
+__pycache__/
+*.pyc
+
+# Archivos ocultos de configuración local de VS Code
+.vscode/
