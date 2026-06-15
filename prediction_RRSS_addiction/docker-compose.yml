@@ -11,4 +11,6 @@ services:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1  # <-- ¡ESTO! Fuerza a Python a pintar e interactuar en tiempo real
+    stdin_open: true
+    tty: true
    
