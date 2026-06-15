@@ -4,6 +4,12 @@ FROM python:3.11-slim
 # 2. Establecemos el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
+# --- PARCHE PARA COMPILAR LIBRERÍAS NATIVAS (COMO PYWINPTY) ---
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 # 3. Copiamos el archivo de requisitos primero (para optimizar la caché de Docker)
 COPY requirements.txt .
 
