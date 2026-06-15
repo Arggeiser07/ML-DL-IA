@@ -5,7 +5,8 @@ from typing import Dict, List
 
 # 1. CONFIGURACIÓN Y CARGA DE ARTIFACTS
 # Cargamos el archivo completo que contiene el modelo y sus columnas
-MODEL_PATH = (r"src\modelo_completo.pkl")
+#MODEL_PATH = (r"src\modelo_completo.pkl")
+MODEL_PATH = os.path.join("src", "modelo_completo.pkl")
 
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"No se encuentra el archivo {MODEL_PATH}. ¿Lo exportaste bien desde el cuaderno?")
